@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:rim="http://www.blackberry.com/ns/widgets" id="be.samverschueren.bb10" version="0.0.1">
+
+    <name>cordova-ua-bb10</name>
+    <description>Cordova Urban Airship plugin for BlackBerry 10</description>
+    <keywords>cordova,urban airship,UA,BB10,BlackBerry10,BlackBerry</keywords>
+
+    <platform name="blackberry10">
+        <!-- Export JS files -->
+        <js-module src="www/Base64.js" name="Base64" />
+        <js-module src="www/PushNotification.js" name="PushNotification">
+            <clobbers target="PushNotification" />
+        </js-module>
+
+        <!-- Describe dependencies -->
+        <dependency id="com.blackberry.invoked" />
+        <dependency id="com.blackberry.push" />
+        <dependency id="com.blackberry.notification" />
+        <dependency id="com.blackberry.app" />
+
+        <!-- Describe native files -->
+        <source-file src="src/index.js" target-dir="PushNotification" />
+        <source-file src="src/Config.js" target-dir="PushNotification" />
+        <source-file src="src/ConfigParser.js" target-dir="PushNotification" />
+        <source-file src="src/Base64.js" target-dir="PushNotification" />
+
+        <config-file target="www/config.xml" parent="/widget">
+            <feature name="be.samverschueren.bb10" value="be.samverschueren.bb10" />
+
+            <!-- Make sure UA is accessible -->
+            <access origin="https://urbanairship.com" subdomains="true" />
+        </config-file>
+
+        <config-file target="www/config.xml" parent="/widget/rim:permissions">
+            <rim:permit system="true">_sys_use_consumer_push</rim:permit>
+        </config-file>
+    </platform>
+</plugin>

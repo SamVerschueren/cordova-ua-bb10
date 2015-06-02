@@ -1,0 +1,12 @@
+{
+    "globalstrict": true,
+    "browser": true,
+    "browserify": true,
+    "devel": true,
+
+    "predef": [
+        "cordova",
+        "PluginResult",
+        "Notification"
+    ]
+}
