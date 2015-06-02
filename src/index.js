@@ -3,7 +3,7 @@
 /**
  * This class communicates with the server
  *
- * @author Sam Verschueren      <sam.verschueren@endare.com>
+ * @author Sam Verschueren      <sam.verschueren@gmail.com>
  * @since  2 Jun. 2014
  */
 
