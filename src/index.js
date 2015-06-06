@@ -116,11 +116,11 @@ var PushNotification = (function() {
     PushNotification.prototype.getPushOptions = function(success, fail, args, env) {
         var result = new PluginResult(args, env);
 
-        var cpid = config.getPreference('com.urbanairship.blackberry_cpid'),
+        var cpid = config.getPreference('com.urbanairship.bb_cpid'),
             inProduction = config.getPreference('com.urbanairship.in_production');
 
         result.ok({
-            appId: config.getPreference('com.urbanairship.blackberry_app_id'),
+            appId: inProduction ? config.getPreference('com.urbanairship.production_bbapp_id') : config.getPreference('com.urbanairship.development_bbapp_id'),
             ppgUrl: inProduction ? 'http://cp' + cpid + '.pushapi.na.blackberry.com' : 'http://pushapi.eval.blackberry.com',
             invokeTargetId: config.getPreference('com.urbanairship.invoke_target_id')
         });
