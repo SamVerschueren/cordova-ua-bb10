@@ -32,7 +32,7 @@ var PushNotification = (function() {
         var result = new PluginResult(args, env),
             request = new XMLHttpRequest();
 
-        var inProduction = config.getPreference('com.urbanairship.in_production'),
+        var inProduction = config.getPreference('com.urbanairship.in_production') == 'true',
             key = inProduction ? config.getPreference('com.urbanairship.production_app_key') : config.getPreference('com.urbanairship.development_app_key'),
             secret = inProduction ? config.getPreference('com.urbanairship.production_app_secret') : config.getPreference('com.urbanairship.development_app_secret');
 
@@ -74,7 +74,7 @@ var PushNotification = (function() {
         var result = new PluginResult(args, env),
             request = new XMLHttpRequest();
 
-        var inProduction = config.getPreference('com.urbanairship.in_production'),
+        var inProduction = config.getPreference('com.urbanairship.in_production') == 'true',
             key = inProduction ? config.getPreference('com.urbanairship.production_app_key') : config.getPreference('com.urbanairship.development_app_key'),
             secret = inProduction ? config.getPreference('com.urbanairship.production_app_secret') : config.getPreference('com.urbanairship.development_app_secret');
 
