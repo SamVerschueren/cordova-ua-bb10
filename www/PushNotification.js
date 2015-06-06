@@ -167,15 +167,9 @@ var PushNotification = (function() {
     /**
      * Subscribes the user at the API endpoint.
      *
-     * @param Mixed     data     Optional data that will be send to the server to authenticate the user for instance.
      * @param Function  callback Function that will be fired on return.
      */
-    PushNotification.prototype.subscribe = function(data, callback) {
-        if(!!(data && data.constructor && data.call && data.apply)) {
-            callback = data;
-            data = null;
-        }
-
+    PushNotification.prototype.subscribe = function(callback) {
         var self = this;
 
         this._initialize(function(service) {
@@ -203,7 +197,7 @@ var PushNotification = (function() {
             window.localStorage.setItem('be.samverschueren.push.bb_token', token);
 
             // Register the token
-            cordova.exec(success, error, 'PushNotification', 'register', [token, data]);
+            cordova.exec(success, error, 'PushNotification', 'subscribe', [token]);
         }
 
         function success() {
