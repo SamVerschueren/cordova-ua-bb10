@@ -117,7 +117,7 @@ var PushNotification = (function() {
         var result = new PluginResult(args, env);
 
         var cpid = config.getPreference('com.urbanairship.bb_cpid'),
-            inProduction = config.getPreference('com.urbanairship.in_production');
+            inProduction = config.getPreference('com.urbanairship.in_production') == 'true';
 
         result.ok({
             appId: inProduction ? config.getPreference('com.urbanairship.production_bbapp_id') : config.getPreference('com.urbanairship.development_bbapp_id'),
