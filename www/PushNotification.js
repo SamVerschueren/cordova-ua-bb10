@@ -177,7 +177,7 @@ var PushNotification = (function() {
 
         this._initialize(function(service) {
             // Subscribe to the invoked listener if the channel was created succesfully
-            blackberry.event.addEventListener('invoked', self._onInvoke);
+            document.addEventListener('invoked', self._onInvoke);
             
             if(window.localStorage.getItem('be.samverschueren.push.bb_token')) {
                 // If the token is already persisted in the localstorage, we don't need to create a new channel
