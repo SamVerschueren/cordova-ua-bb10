@@ -68,6 +68,9 @@ var PushNotification = (function() {
         };
 
         this._onInvoke = function(invokeRequest) {
+            console.log('Invoked');
+            console.log(invokeRequest.action);
+            
             if(invokeRequest.action !== null && invokeRequest.action == 'bb.action.PUSH') {
                 // Extract the payload out of the request
                 self._retrievePayload(invokeRequest, function(payload) {
@@ -173,6 +176,9 @@ var PushNotification = (function() {
         var self = this;
 
         this._initialize(function(service) {
+            // Subscribe to the invoked listener if the channel was created succesfully
+            window.blackberry.event.addEventListener('invoked', self._onInvoke);
+            
             if(window.localStorage.getItem('be.samverschueren.push.bb_token')) {
                 // If the token is already persisted in the localstorage, we don't need to create a new channel
                 return tokenReceived(window.localStorage.getItem('be.samverschueren.push.bb_token'));
@@ -190,9 +196,6 @@ var PushNotification = (function() {
         });
 
         function tokenReceived(token) {
-            // Subscribe to the invoked listener if the channel was created succesfully
-            window.blackberry.event.addEventListener('invoked', self._onInvoke);
-
             // Store token in the local storage
             window.localStorage.setItem('be.samverschueren.push.bb_token', token);
 
