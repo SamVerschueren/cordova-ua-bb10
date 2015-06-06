@@ -25,7 +25,7 @@
         <source-file src="src/Base64.js" target-dir="PushNotification" />
 
         <config-file target="www/config.xml" parent="/widget">
-            <feature name="be.samverschueren.bb10" value="be.samverschueren.bb10" />
+            <feature name="cordova.ua.bb10" value="cordova.ua.bb10" />
 
             <!-- Make sure UA is accessible -->
             <access origin="https://urbanairship.com" subdomains="true" />
