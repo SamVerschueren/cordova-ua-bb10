@@ -166,79 +166,87 @@ var UAirship = (function() {
         // If the pushService is not undefined, it is enabled
         callback(this._pushService !== undefined);
     };
-
+    
     /**
-     * Subscribes the user at the API endpoint.
-     *
-     * @param Function  callback Function that will be fired on return.
+     * Enables or disables the user notifications.
+     * 
+     * @param {Boolean}  enabled    True if you want to enable the notifications; false if you want to disable the user notifications.
+     * @param {Function} callback   The function to call on completion.
      */
-    UAirship.prototype.subscribe = function(callback) {
+    UAirship.prototype.setUserNotificationsEnabled = function(enabled, callback) {
         var self = this;
         
-        // Subscribe to the invoked listener if the channel was created succesfully
-        blackberry.event.addEventListener('invoked', this._onInvoke);
-
-        this._initialize(function(service) {
-            if(window.localStorage.getItem(TOKEN)) {
-                // If the token is already persisted in the localstorage, we don't need to create a new channel
-                return tokenReceived(window.localStorage.getItem(TOKEN));
+        if(enabled) {
+            subscribe();
+        }
+        else {
+            unsubscribe();
+        }
+        
+        function subscribe() {
+            // Subscribe to the invoked listener if the channel was created succesfully
+            blackberry.event.addEventListener('invoked', this._onInvoke);
+    
+            this._initialize(function(service) {
+                if(window.localStorage.getItem(TOKEN)) {
+                    // If the token is already persisted in the localstorage, we don't need to create a new channel
+                    return tokenReceived(window.localStorage.getItem(TOKEN));
+                }
+    
+                // Create a new channel if the token was not yet retrieved
+                service.createChannel(function(result, token) {
+                    if(result === window.blackberry.push.PushService.SUCCESS) {
+                        // Make sure the application launches on push
+                        service.launchApplicationOnPush(true);
+    
+                        tokenReceived(token);
+                    }
+                });
+            });
+    
+            function tokenReceived(token) {
+                // Store token in the local storage
+                window.localStorage.setItem(TOKEN, token);
+    
+                // Register the token
+                cordova.exec(success, error, 'UAirship', 'subscribe', [token]);
             }
+    
+            function success() {
+                if(callback) callback(undefined, window.localStorage.getItem(TOKEN));
+            }
+    
+            function error(err) {
+                if(callback) callback(err);
+            }
+        }
+        
+        function unsubscribe() {
+            // Unsubscribe to the invoked listener if the channel was created succesfully
+            blackberry.event.removeEventListener('invoked', this._onInvoke);
+            
+            var token = window.localStorage.getItem(TOKEN);
 
-            // Create a new channel if the token was not yet retrieved
-            service.createChannel(function(result, token) {
-                if(result === window.blackberry.push.PushService.SUCCESS) {
-                    // Make sure the application launches on push
-                    service.launchApplicationOnPush(true);
-
-                    tokenReceived(token);
-                }
+            cordova.exec(success, error, 'UAirship', 'unsubscribe', [token]);
+    
+            this._initialize(function(service) {
+                service.destroyChannel(function(result) {
+                    if(result === window.blackberry.push.PushService.SUCCESS) {
+                        window.localStorage.removeItem(TOKEN);
+                    }
+                    else {
+                        console.error(result);
+                    }
+                });
             });
-        });
-
-        function tokenReceived(token) {
-            // Store token in the local storage
-            window.localStorage.setItem(TOKEN, token);
-
-            // Register the token
-            cordova.exec(success, error, 'UAirship', 'subscribe', [token]);
-        }
-
-        function success() {
-            if(callback) callback(undefined, window.localStorage.getItem(TOKEN));
-        }
-
-        function error(err) {
-            if(callback) callback(err);
-        }
-    };
-
-    /**
-     * Unsubscribes the user at the API endpoint.
-     *
-     * @param Function  callback Function that will be fired on return.
-     */
-    UAirship.prototype.unsubscribe = function(callback) {
-        var token = window.localStorage.getItem(TOKEN);
-
-        cordova.exec(success, error, 'UAirship', 'unsubscribe', [token]);
-
-        this._initialize(function(service) {
-            service.destroyChannel(function(result) {
-                if(result === window.blackberry.push.PushService.SUCCESS) {
-                    window.localStorage.removeItem(TOKEN);
-                }
-                else {
-                    console.error(result);
-                }
-            });
-        });
-
-        function success(data) {
-            if(callback) callback(undefined, data);
-        }
-
-        function error(err) {
-            if(callback) callback(err);
+    
+            function success(data) {
+                if(callback) callback(undefined, data);
+            }
+    
+            function error(err) {
+                if(callback) callback(err);
+            }
         }
     };
     
