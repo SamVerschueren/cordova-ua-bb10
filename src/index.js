@@ -14,7 +14,7 @@ var config = require('./Config'),
 var UAirship = (function() {
 
     /**
-     * Constructs a new PushNotification object.
+     * Constructs a new Urban Airship object.
      */
     function UAirship() {
 

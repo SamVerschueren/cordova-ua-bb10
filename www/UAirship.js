@@ -98,7 +98,7 @@ var UAirship = (function() {
         };
 
         this._loadPushOptions = function() {
-            exec(success, function() {}, 'PushNotification', 'getPushOptions', []);
+            exec(success, function() {}, 'UAirship', 'getPushOptions', []);
 
             function success(data) {
                 self._pushOptions = data;
