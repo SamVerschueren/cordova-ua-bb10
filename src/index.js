@@ -4,19 +4,19 @@
  * This class communicates with the server
  *
  * @author Sam Verschueren      <sam.verschueren@gmail.com>
- * @since  2 Jun. 2014
+ * @since  2 Jun. 2015
  */
 
 // module dependencies
 var config = require('./Config'),
     base64 = require('./Base64');
 
-var PushNotification = (function() {
+var UAirship = (function() {
 
     /**
      * Constructs a new PushNotification object.
      */
-    function PushNotification() {
+    function UAirship() {
 
     }
 
@@ -28,7 +28,7 @@ var PushNotification = (function() {
      * @param {Object}   args    Arguments passed in from the JavaScript side
      * @param {Object}   env     The environment variable.
      */
-    PushNotification.prototype.subscribe = function(success, fail, args, env) {
+    UAirship.prototype.subscribe = function(success, fail, args, env) {
         var result = new PluginResult(args, env),
             request = new XMLHttpRequest();
 
@@ -70,7 +70,7 @@ var PushNotification = (function() {
      * @param {Object}   args    Arguments passed in from the JavaScript side
      * @param {Object}   env     The environment variable.
      */
-    PushNotification.prototype.unsubscribe = function(success, fail, args, env) {
+    UAirship.prototype.unsubscribe = function(success, fail, args, env) {
         var result = new PluginResult(args, env),
             request = new XMLHttpRequest();
 
@@ -113,7 +113,7 @@ var PushNotification = (function() {
      * @param {Object}   args    Arguments passed in from the JavaScript side
      * @param {Object}   env     The environment variable.
      */
-    PushNotification.prototype.getPushOptions = function(success, fail, args, env) {
+    UAirship.prototype.getPushOptions = function(success, fail, args, env) {
         var result = new PluginResult(args, env);
 
         var cpid = config.getPreference('com.urbanairship.bb_cpid'),
@@ -126,9 +126,9 @@ var PushNotification = (function() {
         });
     };
 
-    return PushNotification;
+    return UAirship;
 })();
 
 
 // Export the module
-module.exports = new PushNotification();
+module.exports = new UAirship();
