@@ -8,8 +8,8 @@
     <platform name="blackberry10">
         <!-- Export JS files -->
         <js-module src="www/Base64.js" name="Base64" />
-        <js-module src="www/PushNotification.js" name="PushNotification">
-            <clobbers target="PushNotification" />
+        <js-module src="www/UAirship.js" name="UAirship">
+            <clobbers target="UAirship" />
         </js-module>
 
         <!-- Describe dependencies -->
@@ -19,10 +19,10 @@
         <dependency id="com.blackberry.app" />
 
         <!-- Describe native files -->
-        <source-file src="src/index.js" target-dir="PushNotification" />
-        <source-file src="src/Config.js" target-dir="PushNotification" />
-        <source-file src="src/ConfigParser.js" target-dir="PushNotification" />
-        <source-file src="src/Base64.js" target-dir="PushNotification" />
+        <source-file src="src/index.js" target-dir="UAirship" />
+        <source-file src="src/Config.js" target-dir="UAirship" />
+        <source-file src="src/ConfigParser.js" target-dir="UAirship" />
+        <source-file src="src/Base64.js" target-dir="UAirship" />
 
         <config-file target="www/config.xml" parent="/widget">
             <feature name="cordova.ua.bb10" value="cordova.ua.bb10" />

@@ -7,14 +7,16 @@ var exec = require('cordova/exec'),
  * This class is used to interact with the core.
  *
  * @author Sam Verschueren		<sam.verschueren@gmail.com>
- * @since  2 Jun. 2014
+ * @since  2 Jun. 2015
  */
-var PushNotification = (function() {
+var UAirship = (function() {
+
+    var TOKEN = 'cordova.ua.bb10.token';
 
     /**
      * Creates a new push notification object.
      */
-    function PushNotification() {
+    function UAirship() {
         var self = this;
 
         this._pushOptions = {};
@@ -68,9 +70,6 @@ var PushNotification = (function() {
         };
 
         this._onInvoke = function(invokeRequest) {
-            console.log('Invoked');
-            console.log(invokeRequest.action);
-            
             if(invokeRequest.action !== null && invokeRequest.action == 'bb.action.PUSH') {
                 // Extract the payload out of the request
                 self._retrievePayload(invokeRequest, function(payload) {
@@ -92,11 +91,9 @@ var PushNotification = (function() {
                 });
             }
             else if(invokeRequest.action !== null && invokeRequest.action == 'bb.action.OPEN') {
-                // Create a `urbanairship.push` event with the extra data of the message
-                var e = new CustomEvent('urbanairship.push', JSON.parse(base64.decode(invokeRequest.data)));
-
-                // Dispatch the event
-                document.dispatchEvent(e);
+                if(self._pushCallback !== undefined) {
+                    self._pushCallback.call(self, JSON.parse(base64.decode(invokeRequest.data)));
+                }
             }
         };
 
@@ -109,34 +106,37 @@ var PushNotification = (function() {
         };
 
         this._retrievePayload = function(invokeRequest, callback) {
-            // Extract the push payload
-            var payload = self._pushService.extractPushPayload(invokeRequest);
-
-            if(payload.isAcknowledgeRequired) {
-                // If an acknowledgement to the server is required, acknowledge the push.
-                payload.acknowledge(true);
-            }
-
-            // Create a new reader object to transform an ArrayBuffer to a string.
-            var reader = new FileReader();
-
-            // Subscribe to the onload event that is fired when the reader is ready.
-            reader.onload = function(evt) {
-                var data;
-
-                try {
-                    data = JSON.parse(evt.target.result);
+            // Initialize the service
+            self._initialize(function(service) {
+                // Extract the push payload
+                var payload = service.extractPushPayload(invokeRequest);
+    
+                if(payload.isAcknowledgeRequired) {
+                    // If an acknowledgement to the server is required, acknowledge the push.
+                    payload.acknowledge(true);
                 }
-                catch(e) {
-                    data = {message: evt.target.result};
-                }
-
-                // Trigger the callback and return the payload object.
-                callback(data);
-            };
-
-            // Start reading the payload data as utf8
-            reader.readAsText(payload.data, 'UTF-8');
+    
+                // Create a new reader object to transform an ArrayBuffer to a string.
+                var reader = new FileReader();
+    
+                // Subscribe to the onload event that is fired when the reader is ready.
+                reader.onload = function(evt) {
+                    var data;
+    
+                    try {
+                        data = JSON.parse(evt.target.result);
+                    }
+                    catch(e) {
+                        data = {message: evt.target.result};
+                    }
+    
+                    // Trigger the callback and return the payload object.
+                    callback(data);
+                };
+    
+                // Start reading the payload data as utf8
+                reader.readAsText(payload.data, 'UTF-8');
+            });
         };
 
         this._onResume = function() {
@@ -162,7 +162,7 @@ var PushNotification = (function() {
      *
      * @param {Function} callback The function to call on completion.
      */
-    PushNotification.prototype.isUserNotificationsEnabled = function(callback) {
+    UAirship.prototype.isUserNotificationsEnabled = function(callback) {
         // If the pushService is not undefined, it is enabled
         callback(this._pushService !== undefined);
     };
@@ -172,16 +172,16 @@ var PushNotification = (function() {
      *
      * @param Function  callback Function that will be fired on return.
      */
-    PushNotification.prototype.subscribe = function(callback) {
+    UAirship.prototype.subscribe = function(callback) {
         var self = this;
+        
+        // Subscribe to the invoked listener if the channel was created succesfully
+        blackberry.event.addEventListener('invoked', this._onInvoke);
 
         this._initialize(function(service) {
-            // Subscribe to the invoked listener if the channel was created succesfully
-            document.addEventListener('invoked', self._onInvoke);
-            
-            if(window.localStorage.getItem('be.samverschueren.push.bb_token')) {
+            if(window.localStorage.getItem(TOKEN)) {
                 // If the token is already persisted in the localstorage, we don't need to create a new channel
-                return tokenReceived(window.localStorage.getItem('be.samverschueren.push.bb_token'));
+                return tokenReceived(window.localStorage.getItem(TOKEN));
             }
 
             // Create a new channel if the token was not yet retrieved
@@ -197,14 +197,14 @@ var PushNotification = (function() {
 
         function tokenReceived(token) {
             // Store token in the local storage
-            window.localStorage.setItem('be.samverschueren.push.bb_token', token);
+            window.localStorage.setItem(TOKEN, token);
 
             // Register the token
-            cordova.exec(success, error, 'PushNotification', 'subscribe', [token]);
+            cordova.exec(success, error, 'UAirship', 'subscribe', [token]);
         }
 
         function success() {
-            if(callback) callback(undefined, window.localStorage.getItem('be.samverschueren.push.bb_token'));
+            if(callback) callback(undefined, window.localStorage.getItem(TOKEN));
         }
 
         function error(err) {
@@ -217,15 +217,15 @@ var PushNotification = (function() {
      *
      * @param Function  callback Function that will be fired on return.
      */
-    PushNotification.prototype.unsubscribe = function(callback) {
-        var token = window.localStorage.getItem('be.samverschueren.push.bb_token');
+    UAirship.prototype.unsubscribe = function(callback) {
+        var token = window.localStorage.getItem(TOKEN);
 
-        cordova.exec(success, error, 'PushNotification', 'unsubscribe', [token]);
+        cordova.exec(success, error, 'UAirship', 'unsubscribe', [token]);
 
         this._initialize(function(service) {
             service.destroyChannel(function(result) {
                 if(result === window.blackberry.push.PushService.SUCCESS) {
-                    window.localStorage.removeItem('be.samverschueren.push.bb_token');
+                    window.localStorage.removeItem(TOKEN);
                 }
                 else {
                     console.error(result);
@@ -241,9 +241,19 @@ var PushNotification = (function() {
             if(callback) callback(err);
         }
     };
+    
+    /**
+     * This method registers a callback that will be called when the user opens a notification
+     * in the HUB.
+     *
+     * @param  Function callback The callback that should be called when a notification is opened.
+     */
+    UAirship.prototype.getLaunchNotification = function(callback) {
+        this._pushCallback = callback;
+    };
 
-    return PushNotification;
+    return UAirship;
 })();
 
 // Export the plugin
-module.exports = new PushNotification();
+module.exports = new UAirship();
