@@ -81,12 +81,19 @@ var UAirship = (function() {
 
                     // Create a new notification in the hub with a title and some other options.
                     new Notification(title, options);
-
+                    
                     // If the application has not been in the foreground yet, it means it launched on push received
                     // and we should close it again.
                     if(!self._hasBeenInForeground) {
                         // Exit the application.
                         self._exitApplication();
+                    }
+                    else {
+                        // Create a `urbanairship.push` event with the extra data of the message
+                        var ev = new CustomEvent('urbanairship.push', payload);
+        
+                        // Dispatch the event
+                        document.dispatchEvent(ev);
                     }
                 });
             }
