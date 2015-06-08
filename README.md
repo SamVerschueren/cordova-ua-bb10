@@ -2,6 +2,41 @@
 
 > BlackBerry 10 plugin for Urban Airship
 
+## Usage
+
+Only call these methods when the `deviceready` event is fired.
+
+```JavaScript
+UAirship.getLaunchNotification(function(payload) {
+    // Executed when the user opens the app via the notification
+});
+
+// Test if the user notifications are enabled
+UAirship.isUserNotificationsEnabled(function(enabled) {
+    if(!enabled) {
+        // Subscribe
+        UAirship.setUserNotificationsEnabled(true, function(err) {
+            if(err) {
+                // Handle the error
+                return;
+            }
+        });
+    }
+});
+```
+
+## Events
+
+When the application is open, you can listen for the incoming push notification.
+
+```JavaScript
+document.addEventListener('urbanairship.push', function(ev) {
+    // Handle the incoming push
+    
+    console.log(ev.message);
+}, false);
+```
+
 ## Configuration
 
 The following tags should be added to your `config.xml` file.
