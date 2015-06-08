@@ -89,11 +89,19 @@ var UAirship = (function() {
                         self._exitApplication();
                     }
                     else {
-                        // Create a `urbanairship.push` event with the extra data of the message
-                        var ev = new CustomEvent('urbanairship.push', payload);
-        
-                        // Dispatch the event
-                        document.dispatchEvent(ev);
+                        // Create a generic event
+                        var evt = document.createEvent("Events")
+                        
+                        // Initialize
+                        evt.initEvent('urbanairship.push', true, true);
+                        
+                        // Copy the properties to the event
+                        for(var key in payload) {
+                            evt[key] = payload[key];
+                        }
+                        
+                        // Fire
+                        document.dispatchEvent(evt);
                     }
                 });
             }
