@@ -185,9 +185,9 @@ var UAirship = (function() {
         
         function subscribe() {
             // Subscribe to the invoked listener if the channel was created succesfully
-            blackberry.event.addEventListener('invoked', this._onInvoke);
+            blackberry.event.addEventListener('invoked', self._onInvoke);
     
-            this._initialize(function(service) {
+            self._initialize(function(service) {
                 if(window.localStorage.getItem(TOKEN)) {
                     // If the token is already persisted in the localstorage, we don't need to create a new channel
                     return tokenReceived(window.localStorage.getItem(TOKEN));
@@ -223,13 +223,13 @@ var UAirship = (function() {
         
         function unsubscribe() {
             // Unsubscribe to the invoked listener if the channel was created succesfully
-            blackberry.event.removeEventListener('invoked', this._onInvoke);
+            blackberry.event.removeEventListener('invoked', self._onInvoke);
             
             var token = window.localStorage.getItem(TOKEN);
 
             cordova.exec(success, error, 'UAirship', 'unsubscribe', [token]);
     
-            this._initialize(function(service) {
+            self._initialize(function(service) {
                 service.destroyChannel(function(result) {
                     if(result === window.blackberry.push.PushService.SUCCESS) {
                         window.localStorage.removeItem(TOKEN);
