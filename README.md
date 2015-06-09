@@ -73,6 +73,20 @@ The following tags should be added to your `config.xml` file.
 </rim:invoke-target>
 ```
 
+#### com.urbanairship.production_bbapp_id
+
+The production Application ID received in the email from BlackBerry. If `com.urbanairship.in_production` is set to `true`, this ID
+will be used to register the device.
+
+#### com.urbanairship.development_bbapp_id
+
+The development Application ID received in the email from BlackBerry. If `com.urbanairship.in_production` is set to `false`, this ID
+will be used to register the device.
+
+#### com.urbanairship.bb_cpid
+
+The BlackBerry Content Provider ID can be found in the email received from BlackBerry.
+
 #### com.urbanairship.invoke_target_id
 
 This property should be unique in BlackBerry World. An example could be `com.company.appname.push`.
