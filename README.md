@@ -25,8 +25,6 @@ UAirship.isUserNotificationsEnabled(function(enabled) {
 });
 ```
 
-## Events
-
 When the application is open, you can listen for the incoming push notification.
 
 ```JavaScript
@@ -85,7 +83,8 @@ will be used to register the device.
 
 #### com.urbanairship.bb_cpid
 
-The BlackBerry Content Provider ID can be found in the email received from BlackBerry.
+The BlackBerry Content Provider ID can be found in the email received from BlackBerry. Use the production CPID number because this is
+not used when registering for development.
 
 #### com.urbanairship.invoke_target_id
 
@@ -97,6 +96,44 @@ The first invoke target ID should be identical to the `com.urbanairship.invoke_t
 
 The second invoke target ID is used to know what should happen when the user taps the notification, in this case it will open the application. Good practice
 is to use the same as the other invoke target ID but instead of push, use open. For example, this could be `com.company.appname.open`.
+
+## API
+
+### isUserNotificationsEnabled(fn)
+
+#### fn
+
+*Required*  
+Type: `function`
+
+The callback function that will be called with a boolean parameter indicating if the user notifications are enabled or not.
+
+### setUserNotificationsEnabled(enabled [, fn])
+
+#### enabled
+
+*Required*  
+Type: `boolean`
+
+Set to `true` if you want to enable the push notifications, `false` if you want to disable the push notifications.
+
+#### fn
+
+Type: `function`
+
+The callback function. The first parameter is the error object if an error occurred, or `undefined` if no error occurred. The second
+parameter is the device token when enabling the user notifications. When disabling the user notifications, nothing is provided as
+second parameter.
+
+### getLaunchNotification(fn)
+
+#### fn
+
+*Required*  
+Type: `function`
+
+This function will be called when the application is opened via the push notification. The parameter of the function is the push
+object send from the UrbanAirship servers.
 
 ## Contributors
 
