@@ -4,7 +4,7 @@
 
 ## Usage
 
-Only call these methods when the `deviceready` event is fired.
+Only call these methods when the cordova `deviceready` event is fired.
 
 ```JavaScript
 UAirship.getLaunchNotification(function(payload) {
@@ -135,7 +135,14 @@ Type: `function`
 This function will be called when the application is opened via the push notification. The parameter of the function is the push
 object send from the UrbanAirship servers.
 
-## Contributors
+## Events
+
+### urbanairship.push
+
+This event will be fired when a push notification comes in and the application is open. The first parameter in the listener
+is the event object which will also hold all the properties of the push object.
+
+## Author
 
 - Sam Verschueren [<sam.verschueren@gmail.com>]
 
