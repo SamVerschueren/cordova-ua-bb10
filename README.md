@@ -50,7 +50,7 @@ The following tags should be added to your `config.xml` file.
 <!-- BlackBerry specific configuration -->
 <preference name="com.urbanairship.production_bbapp_id" value="Your Production BlackBerry App ID" />
 <preference name="com.urbanairship.development_bbapp_id" value="Your Development BlackBerry App ID" />
-<preference name="com.urbanairship.bb_cpid" value="Your BlackBerry Content Provider ID" />
+<preference name="com.urbanairship.bb_cpid" value="Your production BlackBerry Content Provider ID" />
 <preference name="com.urbanairship.invoke_target_id" value="The Invoke Target Push ID" />
 
 <!-- Extra target ID's -->
