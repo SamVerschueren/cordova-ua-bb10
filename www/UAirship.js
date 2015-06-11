@@ -178,6 +178,11 @@ var UAirship = (function() {
      * @param {Function} callback The function to call on completion.
      */
     UAirship.prototype.isUserNotificationsEnabled = function(callback) {
+        if(!callback) {
+            // If the callback is not provided, throw an error
+            throw new Error('UAirship::isUserNotificationsEnabled - Please provide a callback function.');
+        }
+        
         // If the pushService is not undefined, it is enabled
         callback(this._pushService !== undefined);
     };
