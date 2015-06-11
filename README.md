@@ -1,8 +1,8 @@
 # cordova-ua-bb10
 
-> BlackBerry 10 plugin for Urban Airship
+> BlackBerry 10 push plugin for [Urban Airship](http://urbanairship.com/).
 
-## Usage
+## Example
 
 Only call these methods when the cordova `deviceready` event is fired.
 
