@@ -2,6 +2,10 @@
 
 > BlackBerry 10 push plugin for [Urban Airship](http://urbanairship.com/).
 
+**note**: Urban Airship has issues pushing messages in development mode. The messages are not being delivered. They are aware
+of this issue and this will be fixed later this year. If you want to test your push messages in development mode, you can 
+use [node-bb10](https://www.npmjs.com/package/node-bb10) to make sure the device is registered correctly.
+
 ## Example
 
 Only call these methods when the cordova `deviceready` event is fired.
